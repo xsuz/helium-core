@@ -1,5 +1,4 @@
-use crate::sensor::Data;
-use byteorder::{BigEndian, ByteOrder};
+use crate::sensor::Sensor;
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy)]
@@ -14,17 +13,17 @@ pub struct GPSData{
     pub hdop: f32
 }
 
-impl Data for GPSData{
+impl Sensor for GPSData{
     fn parse(data: &Vec<u8>) -> Self{
         GPSData{
-            id: BigEndian::read_u32(&data[0..4]),
-            timestamp: BigEndian::read_u32(&data[4..8]),
-            latitude: BigEndian::read_f64(&data[8..16]),
-            longitude: BigEndian::read_f64(&data[16..24]),
-            altitude: BigEndian::read_f32(&data[24..28]),
-            east_velocity: BigEndian::read_f32(&data[28..32]),
-            north_velocity: BigEndian::read_f32(&data[32..36]),
-            hdop: BigEndian::read_f32(&data[36..40]),
+            id: u32::from_be_bytes(data[0..4].try_into().unwrap()),
+            timestamp: u32::from_be_bytes(data[4..8].try_into().unwrap()),
+            latitude: f64::from_be_bytes(data[8..16].try_into().unwrap()),
+            longitude: f64::from_be_bytes(data[16..24].try_into().unwrap()),
+            altitude: f32::from_be_bytes(data[24..28].try_into().unwrap()),
+            east_velocity: f32::from_be_bytes(data[28..32].try_into().unwrap()),
+            north_velocity: f32::from_be_bytes(data[32..36].try_into().unwrap()),
+            hdop: f32::from_be_bytes(data[36..40].try_into().unwrap()),
         }
     }
     fn get_size() -> usize {
