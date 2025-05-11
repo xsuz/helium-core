@@ -12,6 +12,9 @@ impl Cursor {
         Cursor { range, index, to }
     }
     pub fn update<T: Sensor>(&mut self, db: &Series<T>) {
+        if db.data.len() < 2 {
+            return;
+        }
         let to = if let Some(to) = self.to {
             to
         } else {
@@ -22,16 +25,16 @@ impl Cursor {
             }
         };
         if db.data[self.index].1 + self.range < to {
-            self.index = db.data[self.index..]
+            self.index += db.data[self.index..]
                 .iter()
                 .position(|x| x.1 + self.range >= to)
-                .unwrap_or(db.data.len() - 1);
+                .unwrap_or(db.data.len() - self.index - 1);
         } else {
-            self.index = db.data[..self.index]
+            self.index -= db.data[..self.index]
                 .iter()
                 .rev()
                 .position(|x| x.1 + self.range <= to)
-                .unwrap_or(0);
+                .unwrap_or(self.index);
         }
     }
 }
