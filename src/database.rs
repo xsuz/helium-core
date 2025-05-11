@@ -21,11 +21,16 @@ impl DataBase {
             servo: Series::new(),
             tachometer: Series::new(),
             ultra_sonic: Series::new(),
-            vane: Series::new()
+            vane: Series::new(),
         }
     }
-    pub fn update(&mut self, decoded: &Vec<u8>,timestamp:Option<i64>) {
-        match decoded[0] & 0xF0 {
+    pub fn update(&mut self, decoded: &Vec<u8>, timestamp: Option<i64>) {
+        match if timestamp.is_none() {
+            decoded[8]
+        } else {
+            decoded[0]
+        } & 0xF0
+        {
             0x10 => self.servo.parse(decoded, timestamp),
             0x20 => self.tachometer.parse(decoded, timestamp),
             0x30 => self.pitot.parse(decoded, timestamp),
