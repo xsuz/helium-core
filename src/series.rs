@@ -1,5 +1,8 @@
 use crate::sensor::Sensor;
 
+
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone)]
 pub struct Series<T: Sensor> {
     pub data: Vec<(T, i64)>,
 }

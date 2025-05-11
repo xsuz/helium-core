@@ -1,6 +1,9 @@
 use crate::sensor::Sensor;
 use crate::series::Series;
 
+
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, Copy)]
 pub struct Cursor {
     pub range: i64,
     pub index: usize,

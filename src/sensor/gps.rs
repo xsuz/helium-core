@@ -1,6 +1,6 @@
 use crate::sensor::Sensor;
 
-#[allow(dead_code)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone, Copy)]
 pub struct GPSData{
     pub id: u32,

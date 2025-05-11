@@ -1,7 +1,7 @@
 use crate::sensor::Sensor;
 
 
-#[allow(dead_code)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone, Copy)]
 pub struct BarometerData{
     pub id: u8,

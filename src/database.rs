@@ -1,5 +1,8 @@
 use crate::{sensor, series::Series};
 
+
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone)]
 pub struct DataBase {
     pub barometer: Series<sensor::BarometerData>,
     pub gps: Series<sensor::GPSData>,
