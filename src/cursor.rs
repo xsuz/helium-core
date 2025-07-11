@@ -1,7 +1,6 @@
 use crate::sensor::Sensor;
 use crate::series::Series;
 
-
 /// A struct representing a cursor that tracks a position within a time series data set.
 /// The cursor is defined by a time range and an index within the data series.
 /// This cursor can be used to navigate through the data series, allowing for efficient querying and visualization of time-based data.
@@ -20,7 +19,7 @@ impl Cursor {
     /// * `range`: The time range in milliseconds that the cursor should cover.
     /// * `index`: The initial index in the data series.
     pub fn new(range: i64, index: usize) -> Self {
-        Cursor { range, index}
+        Cursor { range, index }
     }
     /// Updates the cursor's index based on the provided data series and an optional timestamp.
     /// # Arguments
@@ -39,17 +38,20 @@ impl Cursor {
                 return;
             }
         };
-        if series.data[self.index].1 + self.range < to {
-            self.index += series.data[self.index..]
-                .iter()
-                .position(|x| x.1 + self.range >= to)
-                .unwrap_or(series.data.len() - self.index - 1);
-        } else {
+        
+        if series.data[self.index].1 + self.range > to {
             self.index -= series.data[..self.index]
                 .iter()
                 .rev()
                 .position(|x| x.1 + self.range <= to)
                 .unwrap_or(self.index);
+        }else if self.index < series.data.len() - 1 {
+            if series.data[self.index + 1].1 + self.range <= to {
+                self.index += series.data[self.index+1..]
+                    .iter()
+                    .position(|x| x.1 + self.range > to)
+                    .unwrap_or(series.data.len() - self.index - 1);
+            }
         }
     }
 }
